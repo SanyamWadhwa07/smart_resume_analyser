@@ -1,0 +1,26 @@
+# Core Data Science Libraries
+pandas
+numpy
+scikit-learn
+
+# NLP Libraries
+nltk
+spacy
+gensim
+
+# PDF Processing
+PyPDF2
+pdfplumber
+
+# Visualization & Dashboard
+streamlit
+plotly
+matplotlib
+seaborn
+
+# Model Persistence
+joblib
+
+# Additional Utilities
+python-docx
+openpyxl

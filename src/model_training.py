@@ -14,8 +14,8 @@ import joblib
 import os
 
 # Import your preprocessing and feature engineering modules
-from data_preprocessing import load_resumes, load_job_postings, load_skills_mapping, preprocess_resumes, preprocess_job_postings
-from feature_engineering import compute_features
+from src.data_preprocessing import load_resumes, load_job_postings, load_skills_mapping, preprocess_resumes, preprocess_job_postings
+from src.feature_engineering import compute_features
 
 class ResumeJobMatcher:
     """
@@ -333,19 +333,23 @@ class ResumeJobMatcher:
         Train Random Forest with default/simple parameters
         
         Args:
-            X (array): Feature matrix
-            y (array): Target vector
+            X (array): Feature matrix (already split if test_size=None)
+            y (array): Target vector (already split if test_size=None)
             n_estimators (int): Number of trees
             max_depth (int): Maximum tree depth
-            test_size (float): Test set proportion
+            test_size (float or None): Test set proportion, or None if already split
         
         Returns:
             RandomForestClassifier: Trained model
         """
-        # Split data
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=42, stratify=y
-        )
+        # Only split if test_size is provided and > 0
+        if test_size is not None and test_size > 0:
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=42, stratify=y
+            )
+        else:
+            # Data already split, use as-is
+            X_train, X_test, y_train, y_test = X, X, y, y
         
         print(f"Training Random Forest with n_estimators={n_estimators}, max_depth={max_depth}")
         
@@ -362,10 +366,10 @@ class ResumeJobMatcher:
         
         self.model.fit(X_train, y_train)
         
-        # Evaluate
-        metrics = self._evaluate_model(X_test, y_test)
-        
-        self.training_history = {'metrics': metrics}
+        # Evaluate only if we have a test set
+        if test_size is not None and test_size > 0:
+            metrics = self._evaluate_model(X_test, y_test)
+            self.training_history = {'metrics': metrics}
         
         return self.model
     
@@ -446,14 +450,27 @@ class ResumeJobMatcher:
                     features.get('resume_skill_count', 0),
                     features.get('job_skill_count', 0)
                 ]])
-            else:
-                # Model trained with 4 features (default)
+            elif n_features_expected == 4:
+                # Model trained with 4 features
                 feature_array = np.array([[
                     features.get('tfidf_similarity', 0),
                     features.get('doc2vec_similarity', 0),
                     features.get('skill_jaccard', 0),
                     features.get('skill_coverage', 0)
                 ]])
+            elif n_features_expected == 3:
+                # Model trained with 3 features (optimized version)
+                feature_array = np.array([[
+                    features.get('tfidf_similarity', 0),
+                    features.get('doc2vec_similarity', 0),
+                    features.get('skill_jaccard', 0)
+                ]])
+            else:
+                # Fallback: try to use first n features available
+                available_features = ['tfidf_similarity', 'doc2vec_similarity', 'skill_jaccard', 
+                                     'skill_coverage', 'resume_skill_count', 'job_skill_count']
+                feature_values = [features.get(f, 0) for f in available_features[:n_features_expected]]
+                feature_array = np.array([feature_values])
         else:
             feature_array = np.array(features).reshape(1, -1)
         

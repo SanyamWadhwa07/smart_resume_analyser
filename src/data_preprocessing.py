@@ -111,6 +111,7 @@ Handles PDF/text extraction, cleaning, tokenization, and lemmatization
 
 import re
 import pandas as pd
+import json
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
@@ -126,6 +127,7 @@ except ImportError:
 class TextPreprocessor:
     """
     Comprehensive text preprocessing for resumes and job descriptions
+    Supports both PDF/TXT files and structured JSON resume data
     """
     def __init__(self):
         """Initialize preprocessor with required NLP tools"""

@@ -17,7 +17,7 @@ from src.skill_extractor import SkillExtractor
 
 def load_enriched_job_data(limit=10000):
     """Load job postings with ALL metadata"""
-    print("\n[Step 2/4] Loading REAL job postings with metadata...")
+
     print("="*80)
     
     # Load main job postings
@@ -34,14 +34,14 @@ def load_enriched_job_data(limit=10000):
     # Load companies
     print("\n  Loading company data...")
     companies = pd.read_csv('data/raw/jobPostings/companies/companies.csv')
-    print(f"    ✓ Loaded {len(companies):,} companies")
+    print(f"    Loaded {len(companies):,} companies")
     
     # Load industries
     print("  Loading industry mappings...")
     job_industries = pd.read_csv('data/raw/jobPostings/jobs/job_industries.csv')
     industries_lookup = pd.read_csv('data/raw/jobPostings/mappings/industries.csv')
-    print(f"    ✓ Loaded {len(job_industries):,} job-industry mappings")
-    print(f"    ✓ Loaded {len(industries_lookup):,} industry types")
+    print(f"    Loaded {len(job_industries):,} job-industry mappings")
+    print(f"    Loaded {len(industries_lookup):,} industry types")
     
     # Join job industries
     job_industries_merged = job_industries.merge(

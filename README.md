@@ -1,476 +1,248 @@
-# 🎯 Smart Resume Analyzer# Smart Resume - Job Fit Analyzer
+# Smart Resume-Job Fit Analyzer
 
-## Complete Code Documentation
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-An AI-powered resume analysis system that matches resumes to job descriptions and provides actionable insights for improvement.
+An intelligent ML-powered system that automatically matches resumes to job descriptions using NLP and machine learning, achieving **78.81% accuracy**.
 
-### File Overview
+## Features
 
-## ✨ Features
+- **Automated Resume-Job Matching**: TF-IDF, Doc2Vec, and skill-based matching
+- **720+ Skills Database**: 520+ technical + 200+ non-technical skills
+- **Interactive Dashboard**: Real-time predictions with Streamlit
+- **Batch Processing**: Rank multiple candidates simultaneously
+- **Actionable Insights**: Matched/missing skills and personalized recommendations
+- **Multiple Formats**: Supports PDF and TXT files
+- **Fast Inference**: <100ms per prediction
 
-#### 1. data_preprocessing.py
-
-- **🔍 Resume-Job Matching**: Uses TF-IDF, Doc2Vec, and skill extraction for comprehensive matching**Purpose**: Text extraction, cleaning, and preprocessing
-
-- **📊 Detailed Scoring**: Provides multiple similarity metrics and confidence scores**Key Classes**: TextPreprocessor
-
-- **🎯 Skill Analysis**: Identifies matched and missing skills from job requirements**Features**:
-
-- **💡 Smart Recommendations**: Generates actionable improvement suggestions- PDF text extraction (PyPDF2)
-
-- **📈 Interactive Dashboard**: Beautiful Streamlit interface with visualizations- Text cleaning (URLs, emails, special chars removal)
-
-- **📦 Batch Processing**: Analyze multiple resumes against one job description- Tokenization (NLTK)
-
-- **📄 Multiple Formats**: Supports both PDF and DOCX resume formats- Lemmatization
-
-- **🎓 Additional Insights**: Extracts years of experience and education level- Stop word removal
-
-- **🔎 Keyword Highlighting**: Visual highlighting of matched and missing skills
-
-**Usage Example**:
-
-## 🏗️ Project Structure```python
-
-from data_preprocessing import TextPreprocessor
+## Project Structure
 
 ```
+smart_resume_analyser/
+├── src/                          # Core modules
+│   ├── data_loader.py           # Resume/job data loading
+│   ├── data_preprocessing.py    # Text cleaning and preprocessing
+│   ├── skill_extractor.py       # 720+ skill extraction
+│   ├── feature_engineering.py   # TF-IDF, Doc2Vec, Jaccard features
+│   ├── model_training.py        # Random Forest classifier
+│   └── utils.py                 # Helper functions
+├── scripts/                      # Training pipeline
+│   ├── prepare_training_data.py # Creates 4,457 balanced pairs
+│   └── train_model.py           # Trains all models
+├── dashboard/
+│   └── streamlit_app.py         # Interactive web interface
+├── data/
+│   ├── raw/                     # 1,000 resumes + 10,000 jobs
+│   └── processed/               # Training data (4,457 pairs)
+├── models/                       # Trained models (~22 MB)
+│   ├── tfidf_vectorizer.pkl
+│   ├── doc2vec_model.model
+│   └── random_forest_model.pkl
+├── requirements.txt
+└── README.md
+```
 
-smart_resume_analyzer/preprocessor = TextPreprocessor()
+## Quick Start
 
-├── src/                          # Core source code
+### 1. Installation
 
-│   ├── data_preprocessing.py     # Text extraction and cleaning# From PDF
-
-│   ├── feature_engineering.py    # TF-IDF, Doc2Vec, skill matchingtext = preprocessor.extract_text_from_pdf('resume.pdf')
-
-│   ├── model_training.py         # Random Forest classifier
-
-│   └── utils.py                  # Helper functions# Clean and preprocess
-
-├── dashboard/                    # Web interfacecleaned = preprocessor.preprocess(text)
-
-│   └── streamlit_app.py         # Streamlit dashboard```
-
-├── models/                       # Trained ML models
-
-│   ├── tfidf_vectorizer.pkl     # TF-IDF model (5000 features)#### 2. feature_engineering.py
-
-│   ├── doc2vec_model.model      # Doc2Vec model (200 dimensions)**Purpose**: Feature extraction using NLP techniques
-
-│   └── random_forest_model.pkl  # Random Forest classifier**Key Classes**: FeatureEngineer
-
-├── data/                        # Dataset storage**Features**:
-
-│   ├── raw/                     # Original datasets- TF-IDF vectorization (scikit-learn)
-
-│   └── processed/               # Processed data- Doc2Vec embeddings (gensim)
-
-├── scripts/                     # Utility scripts- Named Entity Recognition for skills (spaCy)
-
-│   ├── train_models.py          # Training pipeline- Cosine similarity calculation
-
-│   ├── create_final_package.py  # Package creator- Jaccard similarity for skills
-
-│   └── system_improvements.py   # System analyzer- 200+ technical skills database
-
-├── tests/                       # Test files
-
-│   ├── test_analyzer.py         # System health check**Usage Example**:
-
-│   └── test_improvements.py     # Feature tests```python
-
-├── docs/                        # Documentationfrom feature_engineering import FeatureEngineer
-
-├── archive/                     # Old/deprecated files
-
-├── final/                       # Production-ready packagefe = FeatureEngineer()
-
-├── requirements.txt             # Python dependencies
-
-└── README.md                    # This file# Train on documents
-
-```fe.fit_tfidf(documents)
-
-fe.train_doc2vec(documents)
-
-## 🚀 Quick Start
-
-# Generate features
-
-### 1. Installationfeatures = fe.generate_features(resume_text, job_text)
-
-# Returns: tfidf_similarity, doc2vec_similarity, skill_jaccard, skill_coverage
-
-```bash```
+```bash
+# Clone the repository
+git clone https://github.com/SanyamWadhwa07/smart_resume_analyser.git
+cd smart_resume_analyser
 
 # Create virtual environment
+python -m venv m
 
-python -m venv m#### 3. model_training.py
+# Activate virtual environment
+# Windows PowerShell:
+.\m\Scripts\Activate.ps1
+# Windows CMD:
+.\m\Scripts\activate.bat
+# Linux/Mac:
+source m/bin/activate
 
-**Purpose**: Machine learning model training and prediction
+# Install dependencies
+pip install -r requirements.txt
 
-# Activate virtual environment**Key Classes**: ResumeJobMatcher
-
-.\m\Scripts\Activate.ps1  # Windows PowerShell**Features**:
-
-- Random Forest classifier (scikit-learn)
-
-# Install dependencies- Hyperparameter tuning (RandomizedSearchCV)
-
-pip install -r requirements.txt- Cross-validation
-
-- Performance metrics (accuracy, precision, recall, F1, ROC-AUC)
-
-# Download NLTK data- Model persistence (joblib)
-
+# Download NLTK data
 python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('wordnet')"
 
-**Usage Example**:
-
-# Download spaCy model```python
-
-python -m spacy download en_core_web_smfrom model_training import ResumeJobMatcher
-
+# Download spaCy model
+python -m spacy download en_core_web_sm
 ```
 
+### 2. Train Models (Optional)
+
+Pre-trained models are included. To retrain:
+
+```bash
+# Step 1: Prepare training data (creates 4,457 balanced pairs)
+python scripts/prepare_training_data.py
+
+# Step 2: Train all models (TF-IDF, Doc2Vec, Random Forest)
+python scripts/train_model.py
+# Training time: ~3-5 minutes
+# Achieves: 78.81% accuracy
+```
+
+### 3. Run Dashboard
+
+```bash
+streamlit run dashboard/streamlit_app.py
+```
+
+Access at `http://localhost:8501`
+
+## How It Works
+
+### Analysis Pipeline
+
+1. **Data Loading**: 1,000 resumes + 10,000 LinkedIn job postings
+2. **Preprocessing**: Clean text (remove URLs, emails) → tokenize → lemmatize → remove stopwords
+3. **Feature Engineering**:
+   - **TF-IDF Similarity**: Keyword matching (3,000 features, cosine similarity)
+   - **Doc2Vec Similarity**: Semantic embeddings (50-dim vectors, PV-DM algorithm)
+   - **Skill Jaccard Index**: Skill overlap using 720+ skill database
+4. **ML Prediction**: Random Forest classifier (100 trees, balanced weights)
+5. **Output**: Fit score (0-100%), matched/missing skills, recommendations
+
+### Model Architecture
+
+**Input Features (3)**:
+- TF-IDF Similarity (0-1)
+- Doc2Vec Similarity (0-1)  
+- Skill Jaccard Index (0-1)
+
+**Model**: Random Forest Classifier
+- n_estimators: 100
+- class_weight: balanced
+- Training: 3,565 samples (80%)
+- Testing: 892 samples (20%)
+
+**Output**: Binary classification (Good Fit / Not a Fit) + probability score
+
+### Performance
+
+| Metric | Value |
+|--------|-------|
+| **Accuracy** | 78.81% |
+| **Precision (Good Fit)** | 72% |
+| **Recall (Good Fit)** | 65% |
+| **F1-Score** | 0.68 |
+| **Inference Time** | <100ms |
+| **Model Size** | 22 MB |
+
+**Feature Importance**:
+- Skill Jaccard: 45%
+- TF-IDF: 30%
+- Doc2Vec: 25%
+
+## Dataset
+
+- **Resumes**: 1,000 (JSONL format, avg 1,227 chars, 10.2 skills/resume)
+- **Job Postings**: 10,000 LinkedIn jobs (9,937 after filtering)
+- **Training Pairs**: 4,457 balanced pairs (40% positive, 60% negative)
+- **Skills Database**: 720+ skills (520+ technical + 200+ non-technical)
+
+### Skills Categories
+
+**Technical**: Programming (Python, Java, C++), Web (React, Django, Angular), Cloud (AWS, Docker, Kubernetes), Databases (MySQL, MongoDB), ML (TensorFlow, PyTorch), Mobile (iOS, Android), Testing (Selenium, Jest)
+
+**Non-Technical**: Business Management, Sales/Marketing, Finance, HR, Customer Service, Healthcare, Legal, Education, Design
+
+## Usage Examples
+
+### Single Analysis
+
+```python
+from src.data_preprocessing import TextPreprocessor
+from src.feature_engineering import FeatureEngineer
+from src.model_training import ResumeJobMatcher
+
+# Initialize
+preprocessor = TextPreprocessor()
+feature_engineer = FeatureEngineer()
 matcher = ResumeJobMatcher()
 
-### 2. Run the Dashboard
+# Preprocess
+resume_clean = preprocessor.preprocess(resume_text)
+job_clean = preprocessor.preprocess(job_text)
 
-# Train
-
-```bashX, y = matcher.prepare_training_data(features_df)
-
-streamlit run dashboard/streamlit_app.pymatcher.train_simple(X, y, n_estimators=200)
-
-```
+# Generate features
+features = feature_engineer.generate_features(resume_clean, job_clean)
 
 # Predict
-
-The dashboard will open at `http://localhost:8501`result = matcher.predict_job_fit(features)
-
-# Returns: fit_probability, fit_label, confidence
-
-### 3. Train Models (Optional)```
-
-
-
-If you want to retrain the models:#### 4. utils.py
-
-**Purpose**: Helper functions and utilities
-
-```bash**Key Functions**:
-
-python scripts/train_models.py- load_resume_dataset()
-
-```- load_job_dataset()
-
-- create_labeled_pairs()
-
-## 📊 How It Works- validate_input_text()
-
-- generate_recommendations()
-
-### Analysis Pipeline- calculate_match_quality()
-
-
-
-1. **Text Extraction**: Extracts text from PDF/DOCX resumes#### 5. streamlit_app.py
-
-2. **Preprocessing**: Cleans, tokenizes, and lemmatizes text**Purpose**: Interactive web dashboard
-
-3. **Feature Engineering**:**Features**:
-
-   - TF-IDF vectorization (5000 features)- Single resume analysis
-
-   - Doc2Vec embeddings (200 dimensions)- Batch candidate ranking
-
-   - Skill extraction (100+ technical skills)- Interactive visualizations (Plotly)
-
-   - Skill matching (Jaccard similarity & coverage)- File upload (PDF/TXT)
-
-4. **ML Prediction**: Random Forest classifier predicts job fit- Real-time predictions
-
-5. **Recommendations**: Generates actionable improvement suggestions- Downloadable results
-
-
-
-### Scoring Metrics**Run**:
-
-```bash
-
-- **TF-IDF Similarity**: Keyword-based matching (0-100%)streamlit run streamlit_app.py
-
-- **Doc2Vec Similarity**: Semantic understanding (0-100%)```
-
-- **Skill Jaccard**: Skill overlap ratio (0-100%)
-
-- **Skill Coverage**: Percentage of job skills in resume (0-100%)#### 6. train_model.py
-
-- **Job Fit Score**: Overall prediction probability (0-100%)**Purpose**: Main training pipeline script
-
-**Steps**:
-
-## 🎓 Dataset1. Load datasets
-
-2. Create labeled pairs
-
-- **Resumes**: 962 resumes across 25 job categories3. Preprocess texts
-
-- **Job Postings**: 1000+ real job descriptions4. Train TF-IDF and Doc2Vec
-
-- **Training Data**: 10,000 resume-job pairs5. Generate features
-
-- **Skills Database**: 100+ technical skills6. Train Random Forest
-
-7. Save models
-
-## 🧪 Testing
-
-**Run**:
-
-```bash```bash
-
-# Run system health checkpython train_model.py
-
-python tests/test_analyzer.py```
-
-
-
-# Run feature tests### Data Flow
-
-python tests/test_improvements.py
-
-```1. **Input**: Resume + Job Description (PDF/TXT)
-
-2. **Preprocessing**: Clean, tokenize, lemmatize
-
-## 📦 Production Package3. **Feature Engineering**:
-
-   - TF-IDF vectors → Cosine similarity
-
-The `final/` folder contains a complete production-ready package:   - Doc2Vec embeddings → Semantic similarity
-
-   - NER → Skill extraction → Jaccard similarity
-
-```bash4. **Model Prediction**: Random Forest → Fit probability
-
-cd final5. **Output**: Fit score, matched/missing skills, recommendations
-
-streamlit run dashboard/streamlit_app.py
-
-```### Model Architecture
-
-
-
-## 🛠️ Technologies**Input Features (4)**:
-
-1. TF-IDF Cosine Similarity (0-1)
-
-- **NLP**: NLTK, spaCy, Gensim2. Doc2Vec Semantic Similarity (0-1)
-
-- **ML**: Scikit-learn (Random Forest, TF-IDF)3. Skill Jaccard Similarity (0-1)
-
-- **Web**: Streamlit, Plotly4. Skill Coverage Percentage (0-1)
-
+result = matcher.predict_job_fit(features)
+print(f"Fit Score: {result['fit_score']}%")
+print(f"Matched Skills: {result['matched_skills']}")
+print(f"Missing Skills: {result['missing_skills']}")
+```
+
+### Batch Processing
+
+```python
+# Rank multiple candidates for one job
+results = matcher.predict_batch(resumes, job_description)
+sorted_candidates = sorted(results, key=lambda x: x['fit_score'], reverse=True)
+```
+
+## Dashboard Features
+
+- **Single Analysis**: Upload resume + job → instant predictions
+- **Sample Examples**: 6 pre-loaded examples (3 good fits, 3 bad fits)
+- **Batch Analysis**: Upload multiple resumes → ranked results table
+- **Visualizations**: Gauge charts, radar charts, skill badges
+- **Export**: Download results as CSV
+
+## Technologies
+
+- **NLP**: NLTK, spaCy, Gensim
+- **ML**: scikit-learn (Random Forest, TF-IDF)
+- **Web**: Streamlit
 - **Data**: Pandas, NumPy
+- **PDF**: PyPDF2
 
-- **PDF**: PyPDF2, python-docx**Model**: Random Forest Classifier
+## Documentation
 
-- n_estimators: 200-300
+- **ML_LAB_EVALUATION_REPORT.md**: Complete evaluation report (10 pages)
+- **PROJECT_DOCUMENTATION.md**: Full technical documentation (29 pages)
+- **GitHub**: https://github.com/SanyamWadhwa07/smart_resume_analyser
 
-## 📈 Performance- max_depth: 15-25
+## Future Enhancements
 
-- class_weight: balanced
+**Short-term**:
+- Education/experience/location matching
+- Fuzzy skill matching
+- Hyperparameter tuning (GridSearchCV)
 
-- **TF-IDF Accuracy**: ~34% average similarity
+**Long-term**:
+- BERT/Transformer models
+- REST API
+- 50K+ training pairs
+- Multi-language support
 
-- **Doc2Vec Accuracy**: ~24% average similarity**Output**:
+## Troubleshooting
 
-- **Skill Coverage**: ~63% average coverage- Binary classification (Good Fit / Not Fit)
-
-- **Processing Time**: ~2-3 seconds per resume- Probability score (0-100%)
-
-- **Model Size**: ~50MB total
-
-### Training Data Requirements
-
-## 🎯 Future Improvements
-
-**Minimum**:
-
-See `scripts/system_improvements.py` for analysis of 30+ potential enhancements- 500+ labeled resume-job pairs
-
-- Balanced classes (50% fit, 50% not fit)
-
-## 📝 Documentation
-
-**Recommended**:
-
-Check the `docs/` folder for detailed guides:- 1000+ labeled pairs
-
-- `HOW_TO_RUN.md` - Detailed setup instructions- Diverse job categories
-
-- `SETUP_GUIDE.md` - Configuration guide- Mix of positive and negative examples
-
-- `PROJECT_COMPLETE.md` - Development history
-
-**Label Creation**:
-
----- Positive (1): Resume category matches job category
-
-- Negative (0): Resume category different from job category
-
-**Built with ❤️ using Python and AI**
-
-### Configuration
-
-**TF-IDF Parameters**:
-- max_features: 7000
-- ngram_range: (1, 2)
-- min_df: 2
-- max_df: 0.8
-
-**Doc2Vec Parameters**:
-- vector_size: 200
-- window: 10
-- epochs: 50
-- dm: 1 (PV-DM)
-
-**Random Forest Parameters**:
-- n_estimators: 200
-- max_depth: 20
-- min_samples_split: 5
-- class_weight: balanced
-
-### Performance Optimization
-
-**Speed**:
-- Cache models (Streamlit session state)
-- Use sparse matrices (TF-IDF)
-- Batch processing
-- Multiprocessing for large datasets
-
-**Accuracy**:
-- Increase n_estimators (200→400)
-- Hyperparameter tuning
-- More training data
-- Better skill taxonomy
-
-### Deployment
-
-**Local**:
-```bash
-streamlit run streamlit_app.py
-```
-
-**Streamlit Cloud**:
-1. Push to GitHub
-2. Connect at share.streamlit.io
-3. Deploy
-
-**Docker**:
-```dockerfile
-FROM python:3.9
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-CMD streamlit run streamlit_app.py
-```
-
-### Troubleshooting
-
-**Issue**: "spaCy model not found"
+**Issue**: spaCy model not found  
 **Solution**: `python -m spacy download en_core_web_sm`
 
-**Issue**: "NLTK data not found"
+**Issue**: NLTK data not found  
 **Solution**: `python -c "import nltk; nltk.download('all')"`
 
-**Issue**: "Model not trained"
-**Solution**: Run `python train_model.py` first
+**Issue**: Models not trained  
+**Solution**: Run `python scripts/train_model.py`
 
-**Issue**: Low accuracy
-**Solution**: 
-- Add more training data
-- Tune hyperparameters
-- Improve skills database
-- Check data quality
+## License
 
-### Best Practices
+MIT License
 
-1. **Data Quality**: Clean, well-labeled data is crucial
-2. **Feature Engineering**: Most important for performance
-3. **Model Selection**: Random Forest works well for this task
-4. **Validation**: Always use cross-validation
-5. **Testing**: Test with real resumes before deployment
-6. **Monitoring**: Track prediction quality over time
-7. **Updates**: Regularly update skills database
+## Contact
 
-### Future Enhancements
-
-- BERT/Transformer embeddings
-- Multi-language support
-- Experience level matching
-- Education matching
-- Location filtering
-- Salary prediction
-- Interview question generation
-- ATS integration
-
-### Contact & Support
-
-For questions or issues, please refer to the README.md or contact the developer.
+**Repository**: https://github.com/SanyamWadhwa07/smart_resume_analyser  
+**Author**: Sanyam Wadhwa
 
 ---
-**Version**: 1.0
-**Last Updated**: October 2025
-**Python**: 3.9+
-**License**: MIT
-'''
 
-# Save code guide
-with open('/tmp/smart_resume_analyzer/CODE_GUIDE.md', 'w', encoding='utf-8') as f:
-    f.write(code_guide)
-
-print("✓ Saved: CODE_GUIDE.md")
-
-# Create .gitignore
-gitignore = '''# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-*.egg-info/
-dist/
-build/
-
-# Models
-models/*.pkl
-models/*.model
-
-# Data
-data/raw/*.csv
-data/raw/*.pdf
-data/processed/*.csv
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-predictions.log
-
-# Streamlit
-.streamlit/
+**Built with Python and Machine Learning**  
+**Version**: 1.0 | **Last Updated**: December 2025 | **Accuracy**: 78.81%
